@@ -5,9 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,14 +79,14 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
     private TextView createOperatorTextView(Context context, String text) {
         TextView view = createTextView(context, text);
-        view.setTypeface(null, Typeface.ITALIC);
+        view.setTypeface(null, Typeface.BOLD_ITALIC);
 
         return view;
     }
 
     private TextView createKeywordTextView(Context context, String text) {
         TextView view = createTextView(context, text);
-        view.setTypeface(null, Typeface.ITALIC);
+        view.setTypeface(null, Typeface.BOLD_ITALIC);
         view.setTextColor(Color.parseColor("#228f00"));
 
         return view;
