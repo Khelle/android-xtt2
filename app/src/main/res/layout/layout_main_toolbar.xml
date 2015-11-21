@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:height="50dp"
-    android:background="#3ad40b"
+    android:background="#228f00"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp">
     
