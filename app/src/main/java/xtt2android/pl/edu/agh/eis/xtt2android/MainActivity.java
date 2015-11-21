@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import heart.xtt.XTTModel;
 import xtt2android.pl.edu.agh.eis.xtt2android.adapter.RulesListAdapter;
@@ -39,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         mRulesRecyclerView.setAdapter(rulesAdapter);
 
         final String[] items = new String[] {
-            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5"
+            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5",
+            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5",
+            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5",
         };
 
         final Spinner s = (Spinner) findViewById(R.id.nav_sel_tab);
@@ -52,21 +53,16 @@ public class MainActivity extends AppCompatActivity {
         s.setAdapter(adapter);
 
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Get select item
-                int sid = s.getSelectedItemPosition();
-                Toast.makeText(
-                    getBaseContext(),
-                    "You have selected City : " + items[sid],
-                    Toast.LENGTH_SHORT
-                ).show();
+            public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
+                // TODO Auto-generated method stub
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // TODO Auto-generated method stub
+
             }
         });
     }

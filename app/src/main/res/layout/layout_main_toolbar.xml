@@ -6,14 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:height="50dp"
-    android:background="#228f00"
+    android:background="#3ad40b"
     app:contentInsetLeft="0dp"
-    app:contentInsetStart="0dp">
+    app:contentInsetStart="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetEnd="0dp" >
     
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_margin="0dp">
 
         <Button
             android:id="@+id/nav_btn_prev"
@@ -29,7 +32,7 @@
 
         <Spinner
             android:id="@+id/nav_sel_tab"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:spinnerMode="dropdown"
             android:layout_toLeftOf="@id/nav_btn_next"
