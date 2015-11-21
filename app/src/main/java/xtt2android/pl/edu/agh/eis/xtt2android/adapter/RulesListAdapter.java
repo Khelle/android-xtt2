@@ -44,14 +44,19 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
         LinearLayout layout = (LinearLayout) holder.mCardView.findViewById(R.id.card_layout);
         Context context = layout.getContext();
 
-        layout.addView(createKeywordTextView(context, KEYWORD_IF));
+        boolean isFirst = true;
 
         for (Formulae formulae : rule.getConditions()) {
+            if (isFirst) {
+                isFirst = false;
+                layout.addView(createKeywordTextView(context, KEYWORD_IF));
+            } else {
+                layout.addView(createKeywordTextView(context, KEYWORD_AND));
+            }
+
             layout.addView(createTextView(context, formulae.getAttribute().toString()));
             layout.addView(createOperatorTextView(context, formulae.getOp().toString()));
             layout.addView(createTextView(context, formulae.getValue().toString()));
-
-            layout.addView(createKeywordTextView(context, KEYWORD_AND));
         }
     }
 

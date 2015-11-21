@@ -19,13 +19,15 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRulesRecyclerView;
     private RecyclerView.LayoutManager mRulesLayoutManager;
 
+    private XTTModel mModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         XTT2Extractor extractor = new XTT2Extractor();
-        XTTModel model = extractor.getXTTModel(getApplicationContext().getAssets());
+        mModel = extractor.getXTTModel(getApplicationContext().getAssets());
 
         mRulesRecyclerView = (RecyclerView) findViewById(R.id.rules_recycler_view);
         mRulesRecyclerView.setHasFixedSize(true);
@@ -33,20 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mRulesLayoutManager = new LinearLayoutManager(this);
         mRulesRecyclerView.setLayoutManager(mRulesLayoutManager);
 
-        String[] dataset = new String[] {
-                "Data1",
-                "Data2",
-                "Data3",
-                "Data4",
-                "Data5",
-                "Data6",
-                "Data7",
-                "Data8",
-                "Data9",
-                "Data10",
-        };
-
-        RulesListAdapter rulesAdapter = new RulesListAdapter(model.getTables().get(2));
+        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(2));
         mRulesRecyclerView.setAdapter(rulesAdapter);
 
         final String[] items = new String[] {
