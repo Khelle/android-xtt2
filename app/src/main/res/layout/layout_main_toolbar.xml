@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recommender_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="50dp"
     android:background="#3ad40b"
-    android:padding="0dp">
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp">
     
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <Button
+            android:id="@+id/nav_btn_prev"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+        <Spinner
+            android:id="@+id/nav_sel_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@id/nav_btn_prev" />
 
-    <!--</LinearLayout>-->
+        <Button
+            android:id="@+id/nav_btn_next"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@id/nav_sel_tab" />
+
+    </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>
