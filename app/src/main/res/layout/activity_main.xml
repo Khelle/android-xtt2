@@ -7,21 +7,9 @@
     android:fitsSystemWindows="true"
     tools:context="xtt2android.pl.edu.agh.eis.xtt2android.MainActivity">
 
-    <include layout="@layout/toolbar_actionbar"/>
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <xtt2android.pl.edu.agh.eis.xtt2android.view.Xtt2View
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/content_frame"
-            android:layout_marginTop="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="#fafafa"
-        />
-
-    </android.support.v4.widget.DrawerLayout>
+        android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>
