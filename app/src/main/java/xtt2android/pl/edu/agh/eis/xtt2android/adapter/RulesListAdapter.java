@@ -14,13 +14,16 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 import heart.alsvfd.Formulae;
+import heart.xtt.Decision;
 import heart.xtt.Rule;
 import heart.xtt.Table;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
 
 public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.ViewHolder> {
     final private String KEYWORD_IF = "IF";
+    final private String KEYWORD_THEN = "THEN";
     final private String KEYWORD_AND = "AND";
+    final private String OPERATOR_SET = "SET";
 
     private Rule[] mRules;
 
@@ -57,6 +60,21 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
             layout.addView(createTextView(context, formulae.getAttribute().toString()));
             layout.addView(createOperatorTextView(context, formulae.getOp().toString()));
             layout.addView(createTextView(context, formulae.getValue().toString()));
+        }
+
+        isFirst = true;
+
+        for (Decision decision : rule.getDecisions()) {
+            if (isFirst) {
+                isFirst = false;
+                layout.addView(createKeywordTextView(context, KEYWORD_THEN));
+            } else {
+                layout.addView(createKeywordTextView(context, KEYWORD_AND));
+            }
+
+            layout.addView(createTextView(context, decision.getAttribute().toString()));
+            layout.addView(createOperatorTextView(context, OPERATOR_SET));
+            layout.addView(createTextView(context, decision.getDecision().toString()));
         }
     }
 
