@@ -14,9 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         XTT2Extractor extractor = new XTT2Extractor();
-        XTTModel model = extractor.getXTTModel();
-
-        int i = 1;
+        XTTModel model = extractor.getXTTModel(getApplicationContext().getAssets());
     }
 
 }
