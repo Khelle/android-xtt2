@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="xtt2android.pl.edu.agh.eis.xtt2android.MainActivity">
 
-
     <xtt2android.pl.edu.agh.eis.xtt2android.view.Xtt2View
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
