@@ -9,6 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+import heart.xtt.Table;
 import heart.xtt.XTTModel;
 import xtt2android.pl.edu.agh.eis.xtt2android.adapter.RulesListAdapter;
 import xtt2android.pl.edu.agh.eis.xtt2android.hmr.XTT2Extractor;
@@ -37,11 +41,10 @@ public class MainActivity extends AppCompatActivity {
         RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(2));
         mRulesRecyclerView.setAdapter(rulesAdapter);
 
-        final String[] items = new String[] {
-            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5",
-            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5",
-            "Option #1", "Option #2", "Option #3", "Insanely good option", "Option #5",
-        };
+        final ArrayList<String> items = new ArrayList<String>();
+        for (Table table : mModel.getTables()) {
+            items.add(table.getName());
+        }
 
         final Spinner s = (Spinner) findViewById(R.id.nav_sel_tab);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -54,15 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
-                // TODO Auto-generated method stub
-
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(position));
+                mRulesRecyclerView.setAdapter(rulesAdapter);
+                mRulesRecyclerView.invalidate();
+                mRulesRecyclerView.requestLayout();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
-
+                return;
             }
         });
     }
