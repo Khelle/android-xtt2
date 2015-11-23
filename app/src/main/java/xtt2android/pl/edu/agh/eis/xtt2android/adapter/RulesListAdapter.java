@@ -6,9 +6,12 @@ import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 
@@ -33,9 +36,15 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
     @Override
     public RulesListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_rule_card, parent, false);
+        
+        ((HorizontalScrollView) v.getChildAt(0)).getChildAt(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Test toast", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return new ViewHolder(v);
     }
@@ -106,7 +115,6 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public CardView mCardView;
 
         public ViewHolder(CardView v) {
