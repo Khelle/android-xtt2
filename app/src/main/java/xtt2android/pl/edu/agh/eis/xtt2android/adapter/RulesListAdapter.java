@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import heart.xtt.Decision;
 import heart.xtt.Rule;
 import heart.xtt.Table;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
+import xtt2android.pl.edu.agh.eis.xtt2android.listener.CardClickListener;
 
 public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.ViewHolder> {
     final private String KEYWORD_IF = "IF";
@@ -27,10 +29,12 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
     final private String KEYWORD_AND = "AND";
     final private String OPERATOR_SET = "SET";
 
+    private Table mTable;
     private Rule[] mRules;
 
     public RulesListAdapter(Table table) {
         LinkedList<Rule> rules = table.getRules();
+        mTable = table;
         mRules = table.getRules().toArray(new Rule[rules.size()]);
     }
 
@@ -38,13 +42,6 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
     public RulesListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_rule_card, parent, false);
-        
-        ((HorizontalScrollView) v.getChildAt(0)).getChildAt(0).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Test toast", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         return new ViewHolder(v);
     }
@@ -55,6 +52,12 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
         LinearLayout layout = (LinearLayout) holder.mCardView.findViewById(R.id.card_layout);
         Context context = layout.getContext();
 
+        ((HorizontalScrollView) layout.getParent()).setOnTouchListener(new CardClickListener(mTable, rule, context));
+
+        setUpRuleLayout(rule, layout, context);
+    }
+
+    private void setUpRuleLayout(Rule rule, LinearLayout layout, Context context) {
         boolean isFirst = true;
 
         for (Formulae formulae : rule.getConditions()) {
