@@ -8,9 +8,12 @@ import heart.alsvfd.Formulae;
 abstract public class FormulaeDialog extends Dialog {
 
     Formulae mFormulae;
+    Context mContext;
 
     FormulaeDialog(Context context, Formulae formulae) {
         super(context, 0);
         mFormulae = formulae;
+        mContext = context;
+        setTitle(formulae.getAttribute().getName());
     }
 }

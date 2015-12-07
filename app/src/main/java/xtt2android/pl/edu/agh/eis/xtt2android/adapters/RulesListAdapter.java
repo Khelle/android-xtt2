@@ -1,5 +1,6 @@
 package xtt2android.pl.edu.agh.eis.xtt2android.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.LinkedList;
@@ -71,7 +73,6 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
             TextView textView = createTextView(context, formulae.getValue().toString());
             textView.setOnClickListener(new FormulaeValueClickListener(context, formulae));
-
 
             layout.addView(textView);
         }

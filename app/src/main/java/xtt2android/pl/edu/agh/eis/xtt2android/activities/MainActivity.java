@@ -60,16 +60,17 @@ public class MainActivity extends AppCompatActivity {
         mRulesLayoutManager = new LinearLayoutManager(this);
         mRulesRecyclerView.setLayoutManager(mRulesLayoutManager);
 
-        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(2));
+        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(0));
         mRulesRecyclerView.setAdapter(rulesAdapter);
 
-        final ArrayList<String> items = new ArrayList<String>();
+        final ArrayList<String> items = new ArrayList<>();
         for (Table table : mModel.getTables()) {
             items.add(table.getName());
         }
 
         navSelect = (Spinner) findViewById(R.id.nav_sel_tab);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+
             this,
             android.R.layout.simple_spinner_item,
             items
