@@ -35,7 +35,7 @@ public class FormulaeValueClickListener implements View.OnClickListener {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 MainActivity activity = (MainActivity) mActivity;
-                activity.refreshRecyclerView();
+                activity.redraw();
             }
         });
 

@@ -1,5 +1,6 @@
 package xtt2android.pl.edu.agh.eis.xtt2android.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,26 +11,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import heart.xtt.Attribute;
 import heart.xtt.Table;
 import heart.xtt.XTTModel;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
 import xtt2android.pl.edu.agh.eis.xtt2android.adapters.RulesListAdapter;
 import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.XTT2Extractor;
+import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.Xtt2Support;
 
 public class MainActivity extends AppCompatActivity {
 
-    public RecyclerView mRulesRecyclerView;
+    private RecyclerView mRulesRecyclerView;
     private RecyclerView.LayoutManager mRulesLayoutManager;
 
     private XTTModel mModel;
     private int mModelSelectedIndex;
 
-    public Spinner navSelect;
+    private Spinner navSelect;
     private ImageButton navBtnPrev;
     private ImageButton navBtnNext;
 
@@ -55,14 +60,13 @@ public class MainActivity extends AppCompatActivity {
         RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(0), this);
         mRulesRecyclerView.setAdapter(rulesAdapter);
 
-        final ArrayList<String> items = new ArrayList<>();
+        final ArrayList<String> items = new ArrayList<String>();
         for (Table table : mModel.getTables()) {
             items.add(table.getName());
         }
 
         navSelect = (Spinner) findViewById(R.id.nav_sel_tab);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-
             this,
             android.R.layout.simple_spinner_item,
             items
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mModelSelectedIndex = position;
-                refreshRecyclerView();
+                redraw();
             }
 
             @Override
@@ -109,9 +113,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        linksPanel = (ViewGroup) findViewById(R.id.hidden_panel);
+        linksPanel = (ViewGroup) findViewById(R.id.links_panel);
         cardsPanel = (ViewGroup) findViewById(R.id.cards_panel);
         isLinksPanelShown = false;
+
+        drawLinksPanel();
+    }
+
+    public void redraw() {
+        drawLinksPanel();
+
+        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(mModelSelectedIndex), this);
+        mRulesRecyclerView.setAdapter(rulesAdapter);
+        mRulesRecyclerView.invalidate();
+        mRulesRecyclerView.requestLayout();
     }
 
     public void toggleLinksPanel(final View view) {
@@ -124,18 +139,73 @@ public class MainActivity extends AppCompatActivity {
 
     public void showLinksPanel(final View view) {
 
-        setMargins((ViewGroup) findViewById(R.id.hidden_panel), 0, 50, 0, 0);
-        setMargins((ViewGroup) findViewById(R.id.cards_panel), 0, 100, 0, 0);
+        setMargins(linksPanel, 0, 50, 0, 0);
+        setMargins(cardsPanel, 0, 100, 0, 0);
 
         isLinksPanelShown = true;
     }
 
     public void hideLinksPanel(final View view) {
 
-        setMargins((ViewGroup) findViewById(R.id.hidden_panel), 0, 15, 0, 0);
-        setMargins((ViewGroup) findViewById(R.id.cards_panel), 0, 65, 0, 0);
+        setMargins(linksPanel, 0, 15, 0, 0);
+        setMargins(cardsPanel, 0, 65, 0, 0);
 
         isLinksPanelShown = false;
+    }
+
+    private void drawLinksPanel() {
+        ViewGroup linksView = (ViewGroup) findViewById(R.id.links_view);
+        LinkedList<Attribute> attrs = new LinkedList<Attribute>();
+        Xtt2Support xtt2s = new Xtt2Support();
+        Table table;
+        int tIndex;
+        Button btn;
+        int index = 0;
+
+
+        linksView.removeAllViews();
+
+        attrs = mModel.getTables().get(mModelSelectedIndex).getPrecondition();
+        for (Attribute attr : attrs) {
+            tIndex = xtt2s.getTableIndexByConclusion(mModel, attr.getName());
+
+            if (tIndex != -1) {
+                btn = createLinkButton(index, attr.getName());
+//                btn.setOnClickListener(new LinkButtonClickListener(this, tIndex));
+                linksView.addView(btn);
+                index++;
+            }
+        }
+
+        attrs = mModel.getTables().get(mModelSelectedIndex).getConclusion();
+        for (Attribute attr : attrs) {
+            tIndex = xtt2s.getTableIndexByPrecondition(mModel, attr.getName());
+
+            if (tIndex != -1) {
+                btn = createLinkButton(index, attr.getName());
+//                btn.setOnClickListener(new LinkButtonClickListener(this, tIndex));
+                linksView.addView(btn);
+                index++;
+            }
+        }
+    }
+
+    private Button createLinkButton(int id, String text) {
+
+        Button button = new Button(this);
+
+        button.setId(id);
+        button.setText(text);
+        button.setLayoutParams(
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        );
+        button.setBackgroundColor(Color.TRANSPARENT);;
+        button.setTextColor(Color.WHITE);
+
+        return button;
     }
 
     private void setMargins(ViewGroup view, int left, int top, int right, int bottom) {
@@ -143,10 +213,10 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics dm = view.getResources().getDisplayMetrics();
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         params.setMargins(
-                convertDpToPx(left, dm),
-                convertDpToPx(top, dm),
-                convertDpToPx(right, dm),
-                convertDpToPx(bottom, dm)
+            convertDpToPx(left, dm),
+            convertDpToPx(top, dm),
+            convertDpToPx(right, dm),
+            convertDpToPx(bottom, dm)
         );
         view.setLayoutParams(params);
     }
@@ -155,13 +225,5 @@ public class MainActivity extends AppCompatActivity {
         return Math.round(
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, dm)
         );
-    }
-
-    public void refreshRecyclerView()
-    {
-        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(mModelSelectedIndex), this);
-        mRulesRecyclerView.setAdapter(rulesAdapter);
-        mRulesRecyclerView.invalidate();
-        mRulesRecyclerView.requestLayout();
     }
 }

@@ -7,50 +7,9 @@
     android:scrollbarStyle="insideOverlay">
 
     <LinearLayout
+        android:id="@+id/links_view"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_alignParentTop="true"
-        android:layout_margin="0dp">
-
-        <Button
-            android:id="@+id/link1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="LINK #1"
-            android:background="@android:color/transparent"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/link2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="LINK #2"
-            android:background="@android:color/transparent"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/link3"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="LINK #3"
-            android:background="@android:color/transparent"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/link4"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="LINK #4"
-            android:background="@android:color/transparent"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/link5"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="LINK #5"
-            android:background="@android:color/transparent"
-            android:textColor="#ffffff" />
-
-    </LinearLayout>
+        android:layout_margin="0dp"/>
 </HorizontalScrollView>
