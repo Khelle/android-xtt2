@@ -1,4 +1,4 @@
-package xtt2android.pl.edu.agh.eis.xtt2android;
+package xtt2android.pl.edu.agh.eis.xtt2android.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import heart.xtt.Table;
 import heart.xtt.XTTModel;
-import xtt2android.pl.edu.agh.eis.xtt2android.adapter.RulesListAdapter;
-import xtt2android.pl.edu.agh.eis.xtt2android.hmr.XTT2Extractor;
+import xtt2android.pl.edu.agh.eis.xtt2android.R;
+import xtt2android.pl.edu.agh.eis.xtt2android.adapters.RulesListAdapter;
+import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.XTT2Extractor;
 
 public class MainActivity extends AppCompatActivity {
 

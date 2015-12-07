@@ -1,4 +1,4 @@
-package xtt2android.pl.edu.agh.eis.xtt2android.listener;
+package xtt2android.pl.edu.agh.eis.xtt2android.listeners;
 
 import android.content.Context;
 import android.view.GestureDetector;

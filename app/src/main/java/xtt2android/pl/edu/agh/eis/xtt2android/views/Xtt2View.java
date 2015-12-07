@@ -1,4 +1,4 @@
-package xtt2android.pl.edu.agh.eis.xtt2android.view;
+package xtt2android.pl.edu.agh.eis.xtt2android.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

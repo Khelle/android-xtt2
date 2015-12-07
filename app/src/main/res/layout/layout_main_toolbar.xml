@@ -18,17 +18,27 @@
         android:layout_alignParentTop="true"
         android:layout_margin="0dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/nav_btn_prev"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentLeft="true" />
+            android:padding="12dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/double_chevron_left_arrow_white"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/nav_btn_next"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true" />
+            android:padding="12dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/double_chevron_right_arrow_white"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent" />
 
         <Spinner
             android:id="@+id/nav_sel_tab"

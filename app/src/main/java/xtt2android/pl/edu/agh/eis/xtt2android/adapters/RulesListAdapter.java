@@ -1,18 +1,15 @@
-package xtt2android.pl.edu.agh.eis.xtt2android.adapter;
+package xtt2android.pl.edu.agh.eis.xtt2android.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.LinkedList;
 
@@ -21,7 +18,7 @@ import heart.xtt.Decision;
 import heart.xtt.Rule;
 import heart.xtt.Table;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
-import xtt2android.pl.edu.agh.eis.xtt2android.listener.CardClickListener;
+import xtt2android.pl.edu.agh.eis.xtt2android.listeners.CardClickListener;
 
 public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.ViewHolder> {
     final private String KEYWORD_IF = "IF";
