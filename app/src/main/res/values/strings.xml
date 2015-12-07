@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Xtt2Android</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="button_formulae_value_add">Add value</string>
 </resources>

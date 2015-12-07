@@ -19,6 +19,7 @@ import heart.xtt.Rule;
 import heart.xtt.Table;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.CardClickListener;
+import xtt2android.pl.edu.agh.eis.xtt2android.listeners.FormulaeValueClickListener;
 
 public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.ViewHolder> {
     final private String KEYWORD_IF = "IF";
@@ -54,7 +55,7 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
         setUpRuleLayout(rule, layout, context);
     }
 
-    private void setUpRuleLayout(Rule rule, LinearLayout layout, Context context) {
+    private void setUpRuleLayout(Rule rule, LinearLayout layout, final Context context) {
         boolean isFirst = true;
 
         for (Formulae formulae : rule.getConditions()) {
@@ -67,7 +68,12 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
             layout.addView(createTextView(context, formulae.getAttribute().toString()));
             layout.addView(createOperatorTextView(context, formulae.getOp().toString()));
-            layout.addView(createTextView(context, formulae.getValue().toString()));
+
+            TextView textView = createTextView(context, formulae.getValue().toString());
+            textView.setOnClickListener(new FormulaeValueClickListener(context, formulae));
+
+
+            layout.addView(textView);
         }
 
         isFirst = true;
@@ -82,7 +88,10 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
             layout.addView(createTextView(context, decision.getAttribute().toString()));
             layout.addView(createOperatorTextView(context, OPERATOR_SET));
-            layout.addView(createTextView(context, decision.getDecision().toString()));
+
+            TextView textView = createTextView(context, decision.getDecision().toString());
+
+            layout.addView(textView);
         }
     }
 
