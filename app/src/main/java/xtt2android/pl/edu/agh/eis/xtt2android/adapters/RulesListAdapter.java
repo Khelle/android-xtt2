@@ -31,11 +31,13 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
     private Table mTable;
     private Rule[] mRules;
+    private Activity mActivity;
 
-    public RulesListAdapter(Table table) {
+    public RulesListAdapter(Table table, Activity activity) {
         LinkedList<Rule> rules = table.getRules();
         mTable = table;
         mRules = table.getRules().toArray(new Rule[rules.size()]);
+        mActivity = activity;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
             layout.addView(createOperatorTextView(context, formulae.getOp().toString()));
 
             TextView textView = createTextView(context, formulae.getValue().toString());
-            textView.setOnClickListener(new FormulaeValueClickListener(context, formulae));
+            textView.setOnClickListener(new FormulaeValueClickListener(context, formulae, mActivity));
 
             layout.addView(textView);
         }

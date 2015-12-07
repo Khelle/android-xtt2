@@ -1,24 +1,16 @@
 package xtt2android.pl.edu.agh.eis.xtt2android.activities;
 
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -31,13 +23,13 @@ import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.XTT2Extractor;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRulesRecyclerView;
+    public RecyclerView mRulesRecyclerView;
     private RecyclerView.LayoutManager mRulesLayoutManager;
 
     private XTTModel mModel;
     private int mModelSelectedIndex;
 
-    private Spinner navSelect;
+    public Spinner navSelect;
     private ImageButton navBtnPrev;
     private ImageButton navBtnNext;
 
@@ -60,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         mRulesLayoutManager = new LinearLayoutManager(this);
         mRulesRecyclerView.setLayoutManager(mRulesLayoutManager);
 
-        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(0));
+        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(0), this);
         mRulesRecyclerView.setAdapter(rulesAdapter);
 
         final ArrayList<String> items = new ArrayList<>();
@@ -82,11 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mModelSelectedIndex = position;
-
-                RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(mModelSelectedIndex));
-                mRulesRecyclerView.setAdapter(rulesAdapter);
-                mRulesRecyclerView.invalidate();
-                mRulesRecyclerView.requestLayout();
+                refreshRecyclerView();
             }
 
             @Override
@@ -123,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
         linksPanel = (ViewGroup) findViewById(R.id.hidden_panel);
         cardsPanel = (ViewGroup) findViewById(R.id.cards_panel);
-//        linksPanel.setVisibility(View.INVISIBLE);
         isLinksPanelShown = false;
     }
 
@@ -151,10 +138,6 @@ public class MainActivity extends AppCompatActivity {
         isLinksPanelShown = false;
     }
 
-    public void onCardClick(View view) {
-        Log.d("MainActivity", "onCardClick");
-    }
-
     private void setMargins(ViewGroup view, int left, int top, int right, int bottom) {
 
         DisplayMetrics dm = view.getResources().getDisplayMetrics();
@@ -172,5 +155,13 @@ public class MainActivity extends AppCompatActivity {
         return Math.round(
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, dm)
         );
+    }
+
+    public void refreshRecyclerView()
+    {
+        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(mModelSelectedIndex), this);
+        mRulesRecyclerView.setAdapter(rulesAdapter);
+        mRulesRecyclerView.invalidate();
+        mRulesRecyclerView.requestLayout();
     }
 }
