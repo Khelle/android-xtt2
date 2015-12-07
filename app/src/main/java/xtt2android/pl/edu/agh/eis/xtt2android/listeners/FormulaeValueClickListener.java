@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import heart.alsvfd.Formulae;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;

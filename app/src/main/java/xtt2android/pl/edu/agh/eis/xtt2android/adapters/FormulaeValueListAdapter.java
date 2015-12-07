@@ -22,38 +22,36 @@ import heart.alsvfd.SimpleSymbolic;
 import heart.alsvfd.Value;
 import heart.exceptions.RangeFormatException;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
+import xtt2android.pl.edu.agh.eis.xtt2android.logic.formulae.Mode;
 
 public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValueListAdapter.ViewHolder> {
-
-    final int MODE_SYMBOLIC = 0;
-    final int MODE_SYMBOLIC_RANGE = 1;
-    final int MODE_NUMERIC_RANGE = 2;
 
     private int currentMode;
 
     private Formulae mFormulae;
     private Value[] mValues;
     private final List<Value> mDomain;
+    private boolean[] alreadySetUp;
 
     public FormulaeValueListAdapter(Formulae formulae) {
         mFormulae = formulae;
         List<Value> list = ((SetValue) formulae.getValue()).getValues();
         mValues = list.toArray(new Value[list.size()]);
-        mDomain = new ArrayList<Value>();
+        mDomain = new ArrayList<>();
+        alreadySetUp = new boolean[mValues.length];
+
+        for (int i=0; i < alreadySetUp.length; i++) {
+            alreadySetUp[i] = false;
+        }
+
+        currentMode = Mode.detectMode(formulae);
 
         for (Value v : mFormulae.getAttribute().getType().getDomain().getValues()) {
-            if (v instanceof SimpleSymbolic){
+            if (currentMode == Mode.SYMBOLIC || currentMode == Mode.SYMBOLIC_RANGE){
                 SimpleSymbolic s = new SimpleSymbolic();
                 s.setValue(((SimpleSymbolic) v).getValue());
                 mDomain.add(s);
-
-                if (((SetValue) formulae.getValue()).getValues().get(0) instanceof Range) {
-                    currentMode = MODE_SYMBOLIC_RANGE;
-                } else {
-                    currentMode = MODE_SYMBOLIC;
-                }
-            } else if (v instanceof Range) {
-                currentMode = MODE_NUMERIC_RANGE;
+            } else if (currentMode == Mode.NUMERIC_RANGE) {
                 Range r = (Range) v;
 
                 for (double i = ((SimpleNumeric) r.getFrom()).getValue(); i < ((SimpleNumeric) r.getTo()).getValue(); i++) {
@@ -61,8 +59,6 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
                     s.setValue(i);
                     mDomain.add(s);
                 }
-            } else {
-                currentMode = MODE_SYMBOLIC;
             }
         }
     }
@@ -77,10 +73,14 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (alreadySetUp[position]) {
+            return;
+        }
         Value value = mValues[position];
         LinearLayout layout = (LinearLayout) holder.mLayout.findViewById(R.id.formulae_value_layout);
         Context context = layout.getContext();
 
+        alreadySetUp[position] = true;
         setUp(layout, context, value, position);
     }
 
@@ -88,11 +88,11 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
         final ArrayList<String> items = new ArrayList<>();
         for (Value v : mDomain) {
             switch (currentMode) {
-                case MODE_SYMBOLIC_RANGE:
-                case MODE_SYMBOLIC:
+                case Mode.SYMBOLIC_RANGE:
+                case Mode.SYMBOLIC:
                     items.add(((SimpleSymbolic) v).getValue());
                     break;
-                case MODE_NUMERIC_RANGE:
+                case Mode.NUMERIC_RANGE:
                     items.add(((SimpleNumeric) v).getValue().toString());
                     break;
             }
@@ -107,12 +107,12 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         switch (currentMode) {
-            case MODE_SYMBOLIC_RANGE:
-            case MODE_NUMERIC_RANGE:
+            case Mode.SYMBOLIC_RANGE:
+            case Mode.NUMERIC_RANGE:
                 layout.addView(createSpinner(context, adapter, value, position, true));
                 layout.addView(createSpinner(context, adapter, value, position, false));
                 break;
-            case MODE_SYMBOLIC:
+            case Mode.SYMBOLIC:
             default:
                layout.addView(createSpinner(context, adapter, value, position));
         }
@@ -135,7 +135,7 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
 
                 try {
                     switch (currentMode) {
-                        case MODE_SYMBOLIC_RANGE:
+                        case Mode.SYMBOLIC_RANGE:
                             newValue = new Range();
 
                             if (isStart) {
@@ -145,7 +145,7 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
                             }
                             break;
 
-                        case MODE_NUMERIC_RANGE:
+                        case Mode.NUMERIC_RANGE:
                             newValue = new Range();
 
                             if (isStart) {
@@ -155,7 +155,7 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
                             }
                             break;
 
-                        case MODE_SYMBOLIC:
+                        case Mode.SYMBOLIC:
                         default:
                             newValue = new SimpleSymbolic();
                             ((SimpleSymbolic) newValue).setValue(((SimpleSymbolic) mDomain.get(position)).getValue());
@@ -180,11 +180,11 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
         });
 
         switch (currentMode) {
-            case MODE_NUMERIC_RANGE:
-            case MODE_SYMBOLIC_RANGE:
+            case Mode.NUMERIC_RANGE:
+            case Mode.SYMBOLIC_RANGE:
                 spinner.setSelection(adapter.getPosition(isStart ? ((Range) value).getFrom().toString() : ((Range) value).getTo().toString()));
                 break;
-            case MODE_SYMBOLIC:
+            case Mode.SYMBOLIC:
             default:
                 spinner.setSelection(adapter.getPosition(((SimpleSymbolic) value).getValue()));
         }
