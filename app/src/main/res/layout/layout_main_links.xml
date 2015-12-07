@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hidden_panel"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#3ad40b"
+    android:layout_marginTop="15dp">
+
+    <include layout="@layout/view_links"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="35dp"
+        android:onClick="toggleLinksPanel">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:layout_marginBottom="5dp"
+            android:text=""
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:background="#ffffff"
+            android:onClick="toggleLinksPanel"/>
+    </RelativeLayout>
+
+</RelativeLayout>

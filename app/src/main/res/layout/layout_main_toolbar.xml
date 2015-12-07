@@ -46,7 +46,8 @@
             android:layout_height="50dp"
             android:spinnerMode="dropdown"
             android:layout_toLeftOf="@id/nav_btn_next"
-            android:layout_toRightOf="@id/nav_btn_prev" />
+            android:layout_toRightOf="@id/nav_btn_prev"
+            android:textColor="#ffffff" />
 
     </RelativeLayout>
 

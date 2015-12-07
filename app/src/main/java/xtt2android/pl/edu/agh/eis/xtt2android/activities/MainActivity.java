@@ -1,15 +1,24 @@
 package xtt2android.pl.edu.agh.eis.xtt2android.activities;
 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -31,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private Spinner navSelect;
     private ImageButton navBtnPrev;
     private ImageButton navBtnNext;
+
+    private ViewGroup linksPanel;
+    private ViewGroup cardsPanel;
+    private boolean isLinksPanelShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +119,57 @@ public class MainActivity extends AppCompatActivity {
                 navSelect.setSelection(mModelSelectedIndex);
             }
         });
+
+        linksPanel = (ViewGroup) findViewById(R.id.hidden_panel);
+        cardsPanel = (ViewGroup) findViewById(R.id.cards_panel);
+//        linksPanel.setVisibility(View.INVISIBLE);
+        isLinksPanelShown = false;
+    }
+
+    public void toggleLinksPanel(final View view) {
+        if (!isLinksPanelShown) {
+            showLinksPanel(view);
+        } else {
+            hideLinksPanel(view);
+        }
+    }
+
+    public void showLinksPanel(final View view) {
+
+        setMargins((ViewGroup) findViewById(R.id.hidden_panel), 0, 50, 0, 0);
+        setMargins((ViewGroup) findViewById(R.id.cards_panel), 0, 100, 0, 0);
+
+        isLinksPanelShown = true;
+    }
+
+    public void hideLinksPanel(final View view) {
+
+        setMargins((ViewGroup) findViewById(R.id.hidden_panel), 0, 15, 0, 0);
+        setMargins((ViewGroup) findViewById(R.id.cards_panel), 0, 65, 0, 0);
+
+        isLinksPanelShown = false;
     }
 
     public void onCardClick(View view) {
         Log.d("MainActivity", "onCardClick");
+    }
+
+    private void setMargins(ViewGroup view, int left, int top, int right, int bottom) {
+
+        DisplayMetrics dm = view.getResources().getDisplayMetrics();
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        params.setMargins(
+                convertDpToPx(left, dm),
+                convertDpToPx(top, dm),
+                convertDpToPx(right, dm),
+                convertDpToPx(bottom, dm)
+        );
+        view.setLayoutParams(params);
+    }
+
+    private int convertDpToPx(int dp, DisplayMetrics dm) {
+        return Math.round(
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, dm)
+        );
     }
 }
