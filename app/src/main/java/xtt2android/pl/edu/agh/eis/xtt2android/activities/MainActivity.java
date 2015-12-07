@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -24,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mRulesLayoutManager;
 
     private XTTModel mModel;
+    private int mModelSelectedIndex;
+
+    private Spinner navSelect;
+    private ImageButton navBtnPrev;
+    private ImageButton navBtnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         XTT2Extractor extractor = new XTT2Extractor();
         mModel = extractor.getXTTModel(getApplicationContext().getAssets());
+        mModelSelectedIndex = 0;
 
         mRulesRecyclerView = (RecyclerView) findViewById(R.id.rules_recycler_view);
         mRulesRecyclerView.setHasFixedSize(true);
@@ -47,19 +55,21 @@ public class MainActivity extends AppCompatActivity {
             items.add(table.getName());
         }
 
-        final Spinner s = (Spinner) findViewById(R.id.nav_sel_tab);
+        navSelect = (Spinner) findViewById(R.id.nav_sel_tab);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
             this,
             android.R.layout.simple_spinner_item,
             items
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);
+        navSelect.setAdapter(adapter);
 
-        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        navSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(position));
+                mModelSelectedIndex = position;
+
+                RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(mModelSelectedIndex));
                 mRulesRecyclerView.setAdapter(rulesAdapter);
                 mRulesRecyclerView.invalidate();
                 mRulesRecyclerView.requestLayout();
@@ -68,6 +78,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 return;
+            }
+        });
+
+        navBtnPrev = (ImageButton) findViewById(R.id.nav_btn_prev);
+        navBtnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mModelSelectedIndex = mModelSelectedIndex - 1;
+                if (mModelSelectedIndex < 0) {
+                    mModelSelectedIndex = mModel.getTables().size() - 1;
+                }
+
+                navSelect.setSelection(mModelSelectedIndex);
+            }
+        });
+
+        navBtnNext = (ImageButton) findViewById(R.id.nav_btn_next);
+        navBtnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mModelSelectedIndex = mModelSelectedIndex + 1;
+                if  (mModelSelectedIndex >= mModel.getTables().size()) {
+                    mModelSelectedIndex = 0;
+                }
+
+                navSelect.setSelection(mModelSelectedIndex);
             }
         });
     }
