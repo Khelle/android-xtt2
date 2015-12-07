@@ -1,54 +1,69 @@
 package xtt2android.pl.edu.agh.eis.xtt2android.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import heart.alsvfd.Formulae;
 import heart.alsvfd.Range;
 import heart.alsvfd.SetValue;
+import heart.alsvfd.SimpleNumeric;
 import heart.alsvfd.SimpleSymbolic;
 import heart.alsvfd.Value;
 import heart.exceptions.RangeFormatException;
-import heart.xtt.Decision;
-import heart.xtt.Rule;
-import heart.xtt.Table;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
-import xtt2android.pl.edu.agh.eis.xtt2android.listeners.CardClickListener;
-import xtt2android.pl.edu.agh.eis.xtt2android.listeners.FormulaeValueClickListener;
 
 public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValueListAdapter.ViewHolder> {
 
+    final int MODE_SYMBOLIC = 0;
+    final int MODE_SYMBOLIC_RANGE = 1;
+    final int MODE_NUMERIC_RANGE = 2;
+
+    private int currentMode;
+
     private Formulae mFormulae;
     private Value[] mValues;
-    private final List<SimpleSymbolic> mDomain;
+    private final List<Value> mDomain;
 
     public FormulaeValueListAdapter(Formulae formulae) {
         mFormulae = formulae;
         List<Value> list = ((SetValue) formulae.getValue()).getValues();
         mValues = list.toArray(new Value[list.size()]);
-        mDomain = new ArrayList<SimpleSymbolic>();
+        mDomain = new ArrayList<Value>();
 
         for (Value v : mFormulae.getAttribute().getType().getDomain().getValues()) {
-            SimpleSymbolic s = new SimpleSymbolic();
-            s.setValue(((SimpleSymbolic) v).getValue());
-            mDomain.add(s);
+            if (v instanceof SimpleSymbolic){
+                SimpleSymbolic s = new SimpleSymbolic();
+                s.setValue(((SimpleSymbolic) v).getValue());
+                mDomain.add(s);
+
+                if (((SetValue) formulae.getValue()).getValues().get(0) instanceof Range) {
+                    currentMode = MODE_SYMBOLIC_RANGE;
+                } else {
+                    currentMode = MODE_SYMBOLIC;
+                }
+            } else if (v instanceof Range) {
+                currentMode = MODE_NUMERIC_RANGE;
+                Range r = (Range) v;
+
+                for (double i = ((SimpleNumeric) r.getFrom()).getValue(); i < ((SimpleNumeric) r.getTo()).getValue(); i++) {
+                    SimpleNumeric s = new SimpleNumeric();
+                    s.setValue(i);
+                    mDomain.add(s);
+                }
+            } else {
+                currentMode = MODE_SYMBOLIC;
+            }
         }
     }
 
@@ -66,18 +81,24 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
         LinearLayout layout = (LinearLayout) holder.mLayout.findViewById(R.id.formulae_value_layout);
         Context context = layout.getContext();
 
-        if (value instanceof Range) {
-            setUpRangeValue(layout, context, (Range) value, position);
-        }
+        setUp(layout, context, value, position);
     }
 
-    private void setUpRangeValue(LinearLayout layout, Context context, Range value, int position) {
+    private void setUp(LinearLayout layout, Context context, Value value, int position) {
         final ArrayList<String> items = new ArrayList<>();
         for (Value v : mDomain) {
-            items.add(((SimpleSymbolic) v).getValue());
+            switch (currentMode) {
+                case MODE_SYMBOLIC_RANGE:
+                case MODE_SYMBOLIC:
+                    items.add(((SimpleSymbolic) v).getValue());
+                    break;
+                case MODE_NUMERIC_RANGE:
+                    items.add(((SimpleNumeric) v).getValue().toString());
+                    break;
+            }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
             context,
             android.R.layout.simple_spinner_item,
             items
@@ -85,14 +106,24 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        Spinner start = createRangeSpinner(context, adapter, value, true, position);
-        Spinner end = createRangeSpinner(context, adapter, value, false, position);
+        switch (currentMode) {
+            case MODE_SYMBOLIC_RANGE:
+            case MODE_NUMERIC_RANGE:
+                layout.addView(createSpinner(context, adapter, value, position, true));
+                layout.addView(createSpinner(context, adapter, value, position, false));
+                break;
+            case MODE_SYMBOLIC:
+            default:
+               layout.addView(createSpinner(context, adapter, value, position));
+        }
 
-        layout.addView(start);
-        layout.addView(end);
     }
 
-    private Spinner createRangeSpinner(final Context context, ArrayAdapter<String> adapter, final Range value, final boolean isStart, final int valuePosition) {
+    private Spinner createSpinner(final Context context, ArrayAdapter<String> adapter, final Value value, final int valuePosition) {
+        return createSpinner(context, adapter, value, valuePosition, null);
+    }
+
+    private Spinner createSpinner(final Context context, ArrayAdapter<String> adapter, final Value value, final int valuePosition, final Boolean isStart) {
         Spinner spinner = new Spinner(context);
 
         spinner.setAdapter(adapter);
@@ -100,19 +131,42 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Range newRange = new Range();
+                Value newValue;
 
                 try {
-                    if (isStart) {
-                        newRange.setRange(mDomain.get(position), (SimpleSymbolic) ((Range) mValues[valuePosition]).getTo());
-                    } else {
-                        newRange.setRange((SimpleSymbolic) ((Range) mValues[valuePosition]).getFrom(), mDomain.get(position));
+                    switch (currentMode) {
+                        case MODE_SYMBOLIC_RANGE:
+                            newValue = new Range();
+
+                            if (isStart) {
+                                ((Range) newValue).setRange((SimpleSymbolic) mDomain.get(position), (SimpleSymbolic) ((Range) mValues[valuePosition]).getTo());
+                            } else {
+                                ((Range) newValue).setRange((SimpleSymbolic) ((Range) mValues[valuePosition]).getFrom(), (SimpleSymbolic) mDomain.get(position));
+                            }
+                            break;
+
+                        case MODE_NUMERIC_RANGE:
+                            newValue = new Range();
+
+                            if (isStart) {
+                                ((Range) newValue).setRange((SimpleNumeric) mDomain.get(position), (SimpleNumeric) ((Range) mValues[valuePosition]).getTo());
+                            } else {
+                                ((Range) newValue).setRange((SimpleNumeric) ((Range) mValues[valuePosition]).getFrom(), (SimpleNumeric) mDomain.get(position));
+                            }
+                            break;
+
+                        case MODE_SYMBOLIC:
+                        default:
+                            newValue = new SimpleSymbolic();
+                            ((SimpleSymbolic) newValue).setValue(((SimpleSymbolic) mDomain.get(position)).getValue());
+                            break;
                     }
+
                 } catch (RangeFormatException e) {
-                    e.printStackTrace();
+                    newValue = new SimpleSymbolic();
                 }
 
-                mValues[valuePosition] = newRange;
+                mValues[valuePosition] = newValue;
 
                 SetValue newSetValue = new SetValue();
                 newSetValue.setValues(new ArrayList<>(Arrays.asList(mValues)));
@@ -121,10 +175,19 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
-        spinner.setSelection(adapter.getPosition(isStart ? value.getFrom().toString() : value.getTo().toString()));
+        switch (currentMode) {
+            case MODE_NUMERIC_RANGE:
+            case MODE_SYMBOLIC_RANGE:
+                spinner.setSelection(adapter.getPosition(isStart ? ((Range) value).getFrom().toString() : ((Range) value).getTo().toString()));
+                break;
+            case MODE_SYMBOLIC:
+            default:
+                spinner.setSelection(adapter.getPosition(((SimpleSymbolic) value).getValue()));
+        }
 
         return spinner;
     }
