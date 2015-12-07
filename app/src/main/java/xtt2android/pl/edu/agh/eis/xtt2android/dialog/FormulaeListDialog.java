@@ -10,6 +10,7 @@ import android.widget.Button;
 import heart.alsvfd.Formulae;
 import heart.alsvfd.Range;
 import heart.alsvfd.SetValue;
+import heart.alsvfd.SimpleNumeric;
 import heart.alsvfd.SimpleSymbolic;
 import heart.exceptions.RangeFormatException;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
@@ -50,9 +51,17 @@ public class FormulaeListDialog extends FormulaeDialog {
                     case Mode.SYMBOLIC_RANGE:
                         createSymbolicRange();
                         break;
+                    case Mode.NUMERIC_RANGE:
+                        createNumericRange();
+                        break;
+                    case Mode.SYMBOLIC:
+                    default:
+                        createSimpleSymbolic();
+                        break;
                 }
 
-
+                dismiss();
+                show();
             }
         });
 
@@ -63,5 +72,15 @@ public class FormulaeListDialog extends FormulaeDialog {
         try {
             ((SetValue) mFormulae.getValue()).getValues().add(new Range(new SimpleSymbolic(), new SimpleSymbolic()));
         } catch (RangeFormatException e) {}
+    }
+
+    public void createNumericRange() {
+        try {
+            ((SetValue) mFormulae.getValue()).getValues().add(new Range(new SimpleNumeric(0.0), new SimpleNumeric(0.0)));
+        } catch (RangeFormatException e) {}
+    }
+
+    public void createSimpleSymbolic() {
+        ((SetValue) mFormulae.getValue()).getValues().add(new SimpleSymbolic());
     }
 }
