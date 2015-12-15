@@ -138,17 +138,17 @@ public class Xtt2TableFragment extends Fragment {
     public void selectTable(int index)
     {
         setSelectedTable(index);
-        navSelect.setSelection(index);
+        navSelect.setSelection(mModelSelectedIndex);
     }
 
     public void setSelectedTable(int index)
     {
         int tableSize = mModel.getTables().size();
 
-        if (mModelSelectedIndex < 0) {
+        if (index < 0) {
             mModelSelectedIndex = tableSize - 1;
         }
-        else if (mModelSelectedIndex >= tableSize) {
+        else if (index >= tableSize) {
             mModelSelectedIndex = 0;
         }
         else {
