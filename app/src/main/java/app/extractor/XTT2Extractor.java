@@ -1,4 +1,4 @@
-package xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr;
+package app.extractor;
 
 import android.content.res.AssetManager;
 

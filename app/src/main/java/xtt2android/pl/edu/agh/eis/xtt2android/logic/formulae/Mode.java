@@ -17,7 +17,8 @@ public class Mode {
         Value v = formulae.getAttribute().getType().getDomain().getValues().get(0);
 
         if (v instanceof SimpleSymbolic) {
-            if (((SetValue) formulae.getValue()).getValues().get(0) instanceof Range) {
+            v = formulae.getValue();
+            if (v instanceof SetValue && ((SetValue)v).getValues().get(0) instanceof Range) {
                 return SYMBOLIC_RANGE;
             }
 

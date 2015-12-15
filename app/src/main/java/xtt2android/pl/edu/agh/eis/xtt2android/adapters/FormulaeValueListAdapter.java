@@ -47,7 +47,7 @@ public class FormulaeValueListAdapter extends RecyclerView.Adapter<FormulaeValue
         currentMode = Mode.detectMode(formulae);
 
         for (Value v : mFormulae.getAttribute().getType().getDomain().getValues()) {
-            if (currentMode == Mode.SYMBOLIC || currentMode == Mode.SYMBOLIC_RANGE){
+            if (currentMode == Mode.SYMBOLIC || currentMode == Mode.SYMBOLIC_RANGE) {
                 SimpleSymbolic s = new SimpleSymbolic();
                 s.setValue(((SimpleSymbolic) v).getValue());
                 mDomain.add(s);

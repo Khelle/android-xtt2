@@ -11,7 +11,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -30,7 +29,6 @@ import xtt2android.pl.edu.agh.eis.xtt2android.listeners.LinkButtonClickListener;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.NavigationOffsetClickListener;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.NavigationSelectionListener;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.NavigationToggleClickListener;
-import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.XTT2Extractor;
 import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.Xtt2Support;
 
 public class Xtt2TableFragment extends Fragment {
@@ -40,7 +38,6 @@ public class Xtt2TableFragment extends Fragment {
     private RecyclerView mRulesRecyclerView;
     private RecyclerView.LayoutManager mRulesLayoutManager;
 
-    private XTTModel mModel;
     private int mModelSelectedIndex;
 
     private Spinner navSelect;
@@ -50,6 +47,8 @@ public class Xtt2TableFragment extends Fragment {
     private ViewGroup linksPanel;
     private ViewGroup cardsPanel;
     private boolean isLinksPanelShown;
+
+    private XTTModel mModel;
 
     /**
      * Required empty public constructor
@@ -63,6 +62,14 @@ public class Xtt2TableFragment extends Fragment {
      */
     public static Xtt2TableFragment newInstance() {
         return new Xtt2TableFragment();
+    }
+
+    public void setXTTModel(XTTModel model) {
+        mModel = model;
+    }
+
+    public XTTModel getXTTModel() {
+        return mModel;
     }
 
     @Override
@@ -92,8 +99,7 @@ public class Xtt2TableFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         View view = getView();
-        XTT2Extractor extractor = new XTT2Extractor();
-        mModel = extractor.getXTTModel(currentContext.getAssets());
+
         setSelectedTable(0);
 
         mRulesRecyclerView = (RecyclerView) view.findViewById(R.id.rules_recycler_view);

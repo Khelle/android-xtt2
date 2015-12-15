@@ -20,27 +20,22 @@ import xtt2android.pl.edu.agh.eis.xtt2android.logic.formulae.Mode;
 
 public class FormulaeListDialog extends FormulaeDialog {
 
-    private RecyclerView mValuesRecyclerView;
-    private RecyclerView.LayoutManager mValuesLayoutManager;
-    private FormulaeValueListAdapter mAdapter;
     private int currentMode;
-    private View currentView;
 
     public FormulaeListDialog(Context context, Formulae formulae) {
         super(context, formulae);
         currentMode = Mode.detectMode(formulae);
-        currentView = LayoutInflater.from(context).inflate(R.layout.view_formulae_list_dialog, null);
     }
 
     @Override
     public void show() {
-        mValuesRecyclerView = (RecyclerView) findViewById(R.id.formulae_value_recycler_view);
+        RecyclerView mValuesRecyclerView = (RecyclerView) findViewById(R.id.formulae_value_recycler_view);
         mValuesRecyclerView.setHasFixedSize(true);
 
-        mValuesLayoutManager = new LinearLayoutManager(mContext);
+        RecyclerView.LayoutManager mValuesLayoutManager = new LinearLayoutManager(mContext);
         mValuesRecyclerView.setLayoutManager(mValuesLayoutManager);
 
-        mAdapter = new FormulaeValueListAdapter(mFormulae);
+        FormulaeValueListAdapter mAdapter = new FormulaeValueListAdapter(mFormulae);
         mValuesRecyclerView.setAdapter(mAdapter);
 
         Button addBtn = (Button) findViewById(R.id.formulae_value_add);

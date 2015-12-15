@@ -8,7 +8,9 @@ import heart.alsvfd.Formulae;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
 import xtt2android.pl.edu.agh.eis.xtt2android.dialog.FormulaeDialog;
 import xtt2android.pl.edu.agh.eis.xtt2android.dialog.FormulaeListDialog;
+import xtt2android.pl.edu.agh.eis.xtt2android.dialog.SingleFormulaeDialog;
 import xtt2android.pl.edu.agh.eis.xtt2android.fragments.Xtt2TableFragment;
+import xtt2android.pl.edu.agh.eis.xtt2android.logic.formulae.Mode;
 
 public class FormulaeValueClickListener implements View.OnClickListener {
 
@@ -24,8 +26,16 @@ public class FormulaeValueClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        FormulaeDialog dialog = new FormulaeListDialog(mContext, mFormulae);
-        dialog.setContentView(R.layout.view_formulae_list_dialog);
+        int currentMode = Mode.detectMode(mFormulae);
+        FormulaeDialog dialog;
+
+        if (currentMode == Mode.SYMBOLIC) {
+            dialog = new SingleFormulaeDialog(mContext, mFormulae);
+            dialog.setContentView(R.layout.view_formulae_single_dialog);
+        } else {
+            dialog = new FormulaeListDialog(mContext, mFormulae);
+            dialog.setContentView(R.layout.view_formulae_list_dialog);
+        }
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
