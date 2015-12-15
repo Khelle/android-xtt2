@@ -1,4 +1,8 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include layout="@layout/layout_main_links"/>
     <include layout="@layout/layout_main_toolbar"/>
@@ -24,4 +28,4 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-</merge>
+</RelativeLayout>

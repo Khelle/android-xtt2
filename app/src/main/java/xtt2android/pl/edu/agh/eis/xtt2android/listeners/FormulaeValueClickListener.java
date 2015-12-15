@@ -25,17 +25,17 @@ public class FormulaeValueClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        FormulaeDialog dialog = new FormulaeListDialog(mContext, mFormulae);
-        dialog.setContentView(R.layout.view_formulae_list_dialog);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                MainActivity activity = (MainActivity) mActivity;
-                activity.redraw();
-            }
-        });
-
-        dialog.show();
+//        FormulaeDialog dialog = new FormulaeListDialog(mContext, mFormulae);
+//        dialog.setContentView(R.layout.view_formulae_list_dialog);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                MainActivity activity = (MainActivity) mActivity;
+//                activity.redraw();
+//            }
+//        });
+//
+//        dialog.show();
     }
 }

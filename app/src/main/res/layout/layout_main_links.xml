@@ -10,20 +10,20 @@
     <include layout="@layout/view_links"/>
 
     <RelativeLayout
+        android:id="@+id/xtt2_main_links_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="35dp"
-        android:onClick="toggleLinksPanel">
+        android:layout_marginTop="35dp">
 
         <Button
+            android:id="@+id/xtt2_main_links_button"
             android:layout_width="wrap_content"
             android:layout_height="5dp"
             android:layout_marginBottom="5dp"
             android:text=""
             android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:background="#ffffff"
-            android:onClick="toggleLinksPanel"/>
+            android:background="#ffffff" />
     </RelativeLayout>
 
 </RelativeLayout>

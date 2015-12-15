@@ -7,8 +7,15 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.MainActivity">
 
-    <xtt2android.pl.edu.agh.eis.xtt2android.views.Xtt2View
+    <!--<xtt2android.pl.edu.agh.eis.xtt2android.views.Xtt2View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <fragment
+        android:name="xtt2android.pl.edu.agh.eis.xtt2android.fragments.Xtt2TableFragment"
+        android:id="@+id/xtt2table"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout="@layout/view_xtt2" />
 
 </android.support.design.widget.CoordinatorLayout>
