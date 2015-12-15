@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -28,6 +27,9 @@ import heart.xtt.XTTModel;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
 import xtt2android.pl.edu.agh.eis.xtt2android.adapters.RulesListAdapter;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.LinkButtonClickListener;
+import xtt2android.pl.edu.agh.eis.xtt2android.listeners.NavigationOffsetClickListener;
+import xtt2android.pl.edu.agh.eis.xtt2android.listeners.NavigationSelectionListener;
+import xtt2android.pl.edu.agh.eis.xtt2android.listeners.NavigationToggleClickListener;
 import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.XTT2Extractor;
 import xtt2android.pl.edu.agh.eis.xtt2android.logic.hmr.Xtt2Support;
 
@@ -70,7 +72,7 @@ public class Xtt2TableFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.view_xtt2, container, false);
+        return inflater.inflate(R.layout.layout_xtt2, container, false);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class Xtt2TableFragment extends Fragment {
         View view = getView();
         XTT2Extractor extractor = new XTT2Extractor();
         mModel = extractor.getXTTModel(currentContext.getAssets());
-        mModelSelectedIndex = 0;
+        setSelectedTable(0);
 
         mRulesRecyclerView = (RecyclerView) view.findViewById(R.id.rules_recycler_view);
         mRulesRecyclerView.setHasFixedSize(true);
@@ -100,85 +102,16 @@ public class Xtt2TableFragment extends Fragment {
         mRulesLayoutManager = new LinearLayoutManager(currentContext);
         mRulesRecyclerView.setLayoutManager(mRulesLayoutManager);
 
-//        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(0), getActivity());
+//        RulesListAdapter rulesAdapter = new RulesListAdapter(mModel.getTables().get(getSelectedTable()), getActivity());
 //        mRulesRecyclerView.setAdapter(rulesAdapter);
 
-        final ArrayList<String> items = new ArrayList<>();
-        for (Table table : mModel.getTables()) {
-            items.add(table.getName());
-        }
-
-        navSelect = (Spinner) view.findViewById(R.id.nav_sel_tab);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                currentContext,
-                android.R.layout.simple_spinner_item,
-                items
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        navSelect.setAdapter(adapter);
-
-        navSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mModelSelectedIndex = position;
-                redraw();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                return;
-            }
-        });
-
-        navBtnPrev = (ImageButton) view.findViewById(R.id.nav_btn_prev);
-        navBtnPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mModelSelectedIndex = mModelSelectedIndex - 1;
-                if (mModelSelectedIndex < 0) {
-                    mModelSelectedIndex = mModel.getTables().size() - 1;
-                }
-
-                navSelect.setSelection(mModelSelectedIndex);
-            }
-        });
-
-        navBtnNext = (ImageButton) view.findViewById(R.id.nav_btn_next);
-        navBtnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mModelSelectedIndex = mModelSelectedIndex + 1;
-                if  (mModelSelectedIndex >= mModel.getTables().size()) {
-                    mModelSelectedIndex = 0;
-                }
-
-                navSelect.setSelection(mModelSelectedIndex);
-            }
-        });
-
-        Button linksButton = (Button) view.findViewById(R.id.xtt2_main_links_button);
-        linksButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                toggleLinksPanel(v);
-            }
-        });
-
-        View linksView = (View) view.findViewById(R.id.xtt2_main_links_layout);
-        linksView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                toggleLinksPanel(v);
-            }
-        });
+        createNavigationTableSelectionSpinner();
+        createNavigationPreviousButton();
+        createNavigationNextButton();
+        createNavigationToggleLinksPanel();
 
         linksPanel = (ViewGroup) view.findViewById(R.id.links_panel);
         cardsPanel = (ViewGroup) view.findViewById(R.id.cards_panel);
-        isLinksPanelShown = false;
 
         drawLinksPanel();
     }
@@ -187,13 +120,39 @@ public class Xtt2TableFragment extends Fragment {
         drawLinksPanel();
 
         RulesListAdapter rulesAdapter = new RulesListAdapter(
-                mModel.getTables().get(mModelSelectedIndex),
+                mModel.getTables().get(getSelectedTable()),
                 getActivity()
         );
 
         mRulesRecyclerView.setAdapter(rulesAdapter);
         mRulesRecyclerView.invalidate();
         mRulesRecyclerView.requestLayout();
+    }
+
+    public void selectTable(int index)
+    {
+        setSelectedTable(index);
+        navSelect.setSelection(index);
+    }
+
+    public void setSelectedTable(int index)
+    {
+        int tableSize = mModel.getTables().size();
+
+        if (mModelSelectedIndex < 0) {
+            mModelSelectedIndex = tableSize - 1;
+        }
+        else if (mModelSelectedIndex >= tableSize) {
+            mModelSelectedIndex = 0;
+        }
+        else {
+            mModelSelectedIndex = index;
+        }
+    }
+
+    public int getSelectedTable()
+    {
+        return mModelSelectedIndex;
     }
 
     public void toggleLinksPanel(final View view) {
@@ -220,6 +179,47 @@ public class Xtt2TableFragment extends Fragment {
         isLinksPanelShown = false;
     }
 
+    private void createNavigationTableSelectionSpinner() {
+
+        final ArrayList<String> items = new ArrayList<>();
+        for (Table table : mModel.getTables()) {
+            items.add(table.getName());
+        }
+
+        navSelect = (Spinner) getView().findViewById(R.id.nav_sel_tab);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                currentContext,
+                android.R.layout.simple_spinner_item,
+                items
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        navSelect.setAdapter(adapter);
+        navSelect.setOnItemSelectedListener(new NavigationSelectionListener(this));
+    }
+
+    private void createNavigationPreviousButton()
+    {
+        navBtnPrev = (ImageButton) getView().findViewById(R.id.nav_btn_prev);
+        navBtnPrev.setOnClickListener(new NavigationOffsetClickListener(this, -1));
+    }
+
+    private void createNavigationNextButton()
+    {
+        navBtnNext = (ImageButton) getView().findViewById(R.id.nav_btn_next);
+        navBtnNext.setOnClickListener(new NavigationOffsetClickListener(this, +1));
+    }
+
+    private void createNavigationToggleLinksPanel()
+    {
+        isLinksPanelShown = false;
+
+        Button linksButton = (Button) getView().findViewById(R.id.xtt2_main_links_button);
+        linksButton.setOnClickListener(new NavigationToggleClickListener(this));
+
+        View linksView = (View) getView().findViewById(R.id.xtt2_main_links_layout);
+        linksView.setOnClickListener(new NavigationToggleClickListener(this));
+    }
+
     private void drawLinksPanel() {
         ViewGroup linksView = (ViewGroup) getView().findViewById(R.id.links_view);
         LinkedList<Attribute> attrs = new LinkedList<>();
@@ -229,28 +229,27 @@ public class Xtt2TableFragment extends Fragment {
         Button btn;
         int index = 0;
 
-
         linksView.removeAllViews();
 
-        attrs = mModel.getTables().get(mModelSelectedIndex).getPrecondition();
+        attrs = mModel.getTables().get(getSelectedTable()).getPrecondition();
         for (Attribute attr : attrs) {
             tIndex = xtt2s.getTableIndexByConclusion(mModel, attr.getName());
 
             if (tIndex != -1) {
                 btn = createLinkButton(index, attr.getName());
-//                btn.setOnClickListener(new LinkButtonClickListener(this, tIndex));
+                btn.setOnClickListener(new LinkButtonClickListener(this, tIndex));
                 linksView.addView(btn);
                 index++;
             }
         }
 
-        attrs = mModel.getTables().get(mModelSelectedIndex).getConclusion();
+        attrs = mModel.getTables().get(getSelectedTable()).getConclusion();
         for (Attribute attr : attrs) {
             tIndex = xtt2s.getTableIndexByPrecondition(mModel, attr.getName());
 
             if (tIndex != -1) {
                 btn = createLinkButton(index, attr.getName());
-//                btn.setOnClickListener(new LinkButtonClickListener(this, tIndex));
+                btn.setOnClickListener(new LinkButtonClickListener(this, tIndex));
                 linksView.addView(btn);
                 index++;
             }

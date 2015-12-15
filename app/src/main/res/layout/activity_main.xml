@@ -16,6 +16,6 @@
         android:id="@+id/xtt2table"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/view_xtt2" />
+        tools:layout="@layout/layout_xtt2" />
 
 </android.support.design.widget.CoordinatorLayout>

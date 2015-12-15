@@ -43,6 +43,8 @@ public class Xtt2Support {
                     return index;
                 }
             }
+
+            index++;
         }
 
         return -1;
