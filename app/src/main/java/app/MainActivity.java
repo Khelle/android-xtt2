@@ -1,4 +1,4 @@
-package xtt2android.pl.edu.agh.eis.xtt2android.activities;
+package app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

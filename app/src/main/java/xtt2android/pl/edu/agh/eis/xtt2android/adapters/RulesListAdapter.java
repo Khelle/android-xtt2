@@ -20,6 +20,7 @@ import heart.xtt.Decision;
 import heart.xtt.Rule;
 import heart.xtt.Table;
 import xtt2android.pl.edu.agh.eis.xtt2android.R;
+import xtt2android.pl.edu.agh.eis.xtt2android.fragments.Xtt2TableFragment;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.CardClickListener;
 import xtt2android.pl.edu.agh.eis.xtt2android.listeners.FormulaeValueClickListener;
 
@@ -31,13 +32,13 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
 
     private Table mTable;
     private Rule[] mRules;
-    private Activity mActivity;
+    private Xtt2TableFragment mXtt2Fragment;
 
-    public RulesListAdapter(Table table, Activity activity) {
+    public RulesListAdapter(Table table, Xtt2TableFragment xtt2Fragment) {
         LinkedList<Rule> rules = table.getRules();
         mTable = table;
         mRules = table.getRules().toArray(new Rule[rules.size()]);
-        mActivity = activity;
+        mXtt2Fragment = xtt2Fragment;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class RulesListAdapter extends RecyclerView.Adapter<RulesListAdapter.View
             layout.addView(createOperatorTextView(context, formulae.getOp().toString()));
 
             TextView textView = createTextView(context, formulae.getValue().toString());
-            textView.setOnClickListener(new FormulaeValueClickListener(context, formulae, mActivity));
+            textView.setOnClickListener(new FormulaeValueClickListener(context, formulae, mXtt2Fragment));
 
             layout.addView(textView);
         }

@@ -121,7 +121,7 @@ public class Xtt2TableFragment extends Fragment {
 
         RulesListAdapter rulesAdapter = new RulesListAdapter(
                 mModel.getTables().get(getSelectedTable()),
-                getActivity()
+                this
         );
 
         mRulesRecyclerView.setAdapter(rulesAdapter);
