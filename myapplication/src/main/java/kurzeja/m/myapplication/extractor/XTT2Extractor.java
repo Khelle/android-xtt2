@@ -1,4 +1,4 @@
-package app.extractor;
+package kurzeja.m.myapplication.extractor;
 
 import android.content.res.AssetManager;
 
