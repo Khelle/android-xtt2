@@ -29,7 +29,7 @@ public class FormulaeValueClickListener implements View.OnClickListener {
         int currentMode = Mode.detectMode(mFormulae);
         FormulaeDialog dialog;
 
-        if (currentMode == Mode.SYMBOLIC) {
+        if (currentMode == Mode.SIMPLE_SYMBOLIC) {
             dialog = new SingleFormulaeDialog(mContext, mFormulae);
             dialog.setContentView(R.layout.view_formulae_single_dialog);
         } else {

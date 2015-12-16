@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Xtt2Android.iml" filepath="$PROJECT_DIR$/Xtt2Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Xtt2Fragment/Xtt2Fragment.iml" filepath="$PROJECT_DIR$/Xtt2Fragment/Xtt2Fragment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Xtt2Table/Xtt2Table.iml" filepath="$PROJECT_DIR$/Xtt2Table/Xtt2Table.iml" />
       <module fileurl="file://$PROJECT_DIR$/myapplication/myapplication.iml" filepath="$PROJECT_DIR$/myapplication/myapplication.iml" />
     </modules>
   </component>

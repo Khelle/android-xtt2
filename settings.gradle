@@ -1,1 +1,1 @@
-include ':Xtt2Fragment', ':myapplication'
+include ':Xtt2Table', ':myapplication'

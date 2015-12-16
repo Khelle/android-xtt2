@@ -91,6 +91,6 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="heartdroid-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
-    <orderEntry type="module" module-name="Xtt2Fragment" exported="" />
+    <orderEntry type="module" module-name="Xtt2Table" exported="" />
   </component>
 </module>
